@@ -21,7 +21,6 @@ public class GhostController : MonoBehaviour {
 		particles.Stop ();
 		animator.SetBool ("isMove", false);
 		animator.SetBool ("isWind", false);
-		transform.localScale = initialScale;
 		if(Input.GetKey(KeyCode.RightArrow)) {
 			body.transform.position = body.transform.position + Vector3.right * Time.deltaTime * speed;
 			animator.SetBool ("isMove", true);
