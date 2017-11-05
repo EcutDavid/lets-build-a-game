@@ -3,34 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GhostController : MonoBehaviour {
-	public Sprite standSprite;
-	public Sprite moveSprite;
-	public Sprite windSprite;
 	public float speed;
+	private Animator animator;
+	private Vector3 initialScale;
+	private Vector3 flipXScale;
 
-	// Use this for initialization
 	void Start () {
-		
+		animator = GetComponent<Animator> ();
+		initialScale = transform.localScale;
+		flipXScale = transform.localScale - new Vector3(transform.localScale.x * 2f, 0, 0);
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		var spriteRenderer = GetComponent<SpriteRenderer> ();
 		var body = GetComponent<Rigidbody2D> ();
 		var particles = GetComponent<ParticleSystem> ();
 		particles.Stop ();
-		spriteRenderer.sprite = standSprite;
+		animator.SetBool ("isMove", false);
+		animator.SetBool ("isWind", false);
+		transform.localScale = initialScale;
 		if(Input.GetKey(KeyCode.RightArrow)) {
-			spriteRenderer.sprite = moveSprite;
 			body.transform.position = body.transform.position + Vector3.right * Time.deltaTime * speed;
+			animator.SetBool ("isMove", true);
 		}
 		if(Input.GetKey(KeyCode.LeftArrow)) {
 			body.transform.position = body.transform.position - Vector3.right * Time.deltaTime * speed;
+			animator.SetBool ("isMove", true);
+			transform.localScale = flipXScale;
 		}
 		if(Input.GetKey(KeyCode.Space)) {
 			body.AddForce (transform.up  * 10f);
+		}
+		if(Input.GetKey(KeyCode.W)) {
+			animator.SetBool ("isWind", true);
 			particles.Play ();
-			spriteRenderer.sprite = windSprite;
 		}
 	}
 }
