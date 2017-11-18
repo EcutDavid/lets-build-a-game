@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class GhostController : MonoBehaviour {
 	public float speed;
+    public Transform mainCameraPos;
+
 	private Animator animator;
 	private Vector3 initialScale;
 	private Vector3 flipXScale;
+    
+
 
 	void Start () {
 		animator = GetComponent<Animator> ();
@@ -32,11 +36,20 @@ public class GhostController : MonoBehaviour {
 			transform.localScale = flipXScale;
 		}
 		if(Input.GetKey(KeyCode.Space)) {
+            //FIXME: do not keep the force increasing
 			body.AddForce (transform.up  * 10f);
 		}
 		if(Input.GetKey(KeyCode.W)) {
 			animator.SetBool ("isWind", true);
 			particles.Play ();
 		}
-	}
+
+        //let the main camera follow ghost.
+        Vector3 mainCameraOffset = new Vector3(0, 2.5f, -10f);
+        mainCameraPos.position = body.transform.position + mainCameraOffset;
+
+        //make the characters not fall to the ground. #This code could be used in other GameObject
+        body.transform.rotation = Quaternion.Euler(0, 0, 0);
+
+    }
 }
